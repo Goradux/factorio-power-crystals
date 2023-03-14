@@ -1,0 +1,23 @@
+{
+  "name": "factorio-power-crystals",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "before_debug": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Goradux/factorio-power-crystals.git"
+  },
+  "author": "Goradux",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Goradux/factorio-power-crystals/issues"
+  },
+  "homepage": "https://github.com/Goradux/factorio-power-crystals#readme",
+  "devDependencies": {
+    "jszip": "3.10.1"
+  }
+}

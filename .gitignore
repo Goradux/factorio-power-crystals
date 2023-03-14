@@ -1,0 +1,8 @@
+*.zip
+mod-list.json
+mod-settings.dat
+.vscode/settings.json
+ignore.lua
+
+node_modules/
+package-lock.json

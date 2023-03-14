@@ -1,0 +1,13 @@
+https://www.newgrounds.com/art/view/gamesmashdash/pixel-art-crystal-gems-redesign-freedom-planet-2
+
+from blue:
+green is -100 hue
+red is +150 hue
+purple is +60 hue
+
+https://www.pixilart.com/draw#
+
+dropshadow x 25 px
+dropshadow y +10 px (but 0 for biggest crystal, because out of bounds otherwise)
+dropshadow opacity 0.4
+dropshadow blur 8 px
