@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "before_debug": ""
+    "before_debug": "node ./scripts.js"
   },
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Goradux/factorio-power-crystals.git"
@@ -18,6 +19,7 @@
   },
   "homepage": "https://github.com/Goradux/factorio-power-crystals#readme",
   "devDependencies": {
-    "jszip": "3.10.1"
+    "adm-zip": "0.5.10",
+    "fs": "0.0.1-security"
   }
 }

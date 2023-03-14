@@ -6,3 +6,4 @@ ignore.lua
 
 node_modules/
 package-lock.json
+env.json

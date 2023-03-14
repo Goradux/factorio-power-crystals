@@ -1,13 +1,24 @@
-// # # 1. read the version in the json
-// # # 2. zip and rename
-// # # 3. move to mod folder
+import AdmZip from "adm-zip";
+import * as fs from "fs";
+import info from "./PowerCrystals/info.json" assert { type: "json" };
+import env from "./env.json" assert { type: "json" };
 
-// # with open("./PowerCrystals/info.json", "r") as f:
-// #     data = f.read()
-// #     data.
+async function createZipArchive() {
+  const zip = new AdmZip();
+  console.log(info);
+  const version = info.version;
+  const outputFilename = `PowerCrystals_${version}.zip`;
+  zip.addLocalFolder("./PowerCrystals");
+  zip.writeZip(outputFilename);
+  console.log(`Created ${outputFilename} successfully`);
+  return outputFilename;
+}
 
-import JSZip from "jszip";
+const filename = await createZipArchive();
 
-const zip = new JSZip();
+var newPath = env.modFolderPath + filename;
 
-const img = zip.folder("images");
+fs.rename(filename, newPath, function (err) {
+  if (err) throw err;
+  console.log("Successfully moved the mod to mod folder. Ready to debug.");
+});
