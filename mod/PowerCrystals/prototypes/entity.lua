@@ -10,7 +10,7 @@ local function by_pixel(x, y)
   return { x / 32, y / 32 }
 end
 
----comment
+--- Get map color based on the type and tier of the crystal
 ---@param type string
 ---@param tier integer
 ---@return {r: integer, g: integer, b: integer}
@@ -61,14 +61,9 @@ end
 local function generateBasePowerCrystal(tier, positive)
   local basePowerCrystal = table.deepcopy(data.raw.beacon["beacon"])
   basePowerCrystal.name = "base-power-crystal-" .. tier
-  -- basePowerCrystal.icon =
-  -- {
-  --   icon = basePowerCrystal.icon,
-  --   tint = tint
-  -- }
   basePowerCrystal.is_military_target = false
   basePowerCrystal.energy_source = { type = "void" }
-  basePowerCrystal.selectable_in_game = true -- TODO: temprorary for debugging
+  basePowerCrystal.selectable_in_game = true -- but you should never be able to get to it through the model crystal
   basePowerCrystal.minable = nil
   basePowerCrystal.allowed_effects = { "speed", "productivity", "consumption", "pollution" }
   basePowerCrystal.graphics_set = nil
@@ -91,7 +86,6 @@ local function generateBasePowerCrystal(tier, positive)
   basePowerCrystal.supply_area_distance = supply_area_distance
   basePowerCrystal.max_health = max_health
 
-  -- basePowerCrystal.graphics_set.draw_light_when_idle = true
   basePowerCrystal.distribution_effectivity = 1
   basePowerCrystal.module_specification.module_slots = module_slots
   basePowerCrystal.map_color = { a = 0 } -- invisible
@@ -120,9 +114,6 @@ local function generateBasePowerCrystal(tier, positive)
       percent = 0
     }
   }
-
-  -- TODO: define explosion on death
-  -- TODO: define color, animation, etc
 
   -- modify for bad crystals. Make them almost unkillable
   if positive == false then
@@ -168,93 +159,13 @@ local base_tier_2_negative = generateBasePowerCrystal(2, false)
 data:extend { base_tier_1_negative, base_tier_2_negative }
 
 
--- ---@type defines.prototypes["beacon"]
--- local powerCrystal = table.deepcopy(data.raw.beacon["beacon"])
-
--- powerCrystal.name = "base-power-crystal"
--- -- powerCrystal.icons = {
--- --   {
--- --     icon = powerCrystal.icon,
--- --     tint = { r = 0, g = 0, b = 1, a = 0.75 }
--- --   },
--- --   {
--- --     icon = powerCrystal.icon,
--- --     tint = { r = 1, g = 0, b = 0, a = 0.75 }
--- --   },
--- --   {
--- --     icon = powerCrystal.icon,
--- --     tint = { r = 0, g = 1, b = 0, a = 0.75 }
--- --   },
--- -- }
--- powerCrystal.is_military_target = false
--- powerCrystal.supply_area_distance = 64 -- should be random and depend on the tier
--- powerCrystal.energy_source = { type = "void" }
--- powerCrystal.max_health = 500
--- powerCrystal.selectable_in_game = false
--- powerCrystal.graphics_set = nil -- to make it invisible
--- powerCrystal.minable = nil      -- TODO: mb keep empty?
--- powerCrystal.allowed_effects = { "speed", "productivity", "consumption", "pollution" }
--- -- powerCrystal.dying_explosion = {} -- TODO
-
--- -- add powerCrystal1
--- -- add powerCrystal2
--- -- add powerCrystal3
-
-
--- data:extend { powerCrystal }
-
-
-
-
-
-
-
-
-
-
-
-
--- local maskCrystal = table.deepcopy(data.raw.beacon["beacon"])
-
--- maskCrystal.name = "model-power-crystal"
--- -- maskCrystal.icons = {
--- --   {
--- --     icon = maskCrystal.icon,
--- --     tint = { r = 0, g = 0, b = 1, a = 0.75 }
--- --   },
--- --   {
--- --     icon = maskCrystal.icon,
--- --     tint = { r = 1, g = 0, b = 0, a = 0.75 }
--- --   },
--- --   {
--- --     icon = maskCrystal.icon,
--- --     tint = { r = 0, g = 1, b = 0, a = 0.75 }
--- --   },
--- -- }
--- maskCrystal.is_military_target = false
--- maskCrystal.supply_area_distance = 64 -- should be random and depend on the tier
--- maskCrystal.energy_source = { type = "void" }
--- maskCrystal.max_health = 500
--- maskCrystal.selectable_in_game = true
--- -- maskCrystal.graphics_set = nil
--- maskCrystal.minable = nil
--- maskCrystal.allowed_effects = nil
--- maskCrystal.module_specification.module_slots = 0
-
--- data:extend { maskCrystal }
-
-
-
-
-
-
-
---- "model" means that this entity only does the graphics
+--- "model" means that this entity only does the graphics.
 --- I had to do implement the beacon this way so that a player could hover over
 --- the entity, but when clicking on it no modules would show. Otherwise,
 --- players could just remove the modules and use them in other places
----@param type any
----@param tier any
+---@param type string
+---@param tier integer
+---@param positive boolean
 -- -@return table|unknown
 local function generateModelPowerCrystal(type, tier, positive)
   local modelPowerCrystal = table.deepcopy(data.raw.beacon["beacon"])
@@ -285,7 +196,7 @@ local function generateModelPowerCrystal(type, tier, positive)
 
   modelPowerCrystal.working_sound =
   {
-    sound = { filename = "__base__/sound/accumulator-idle.ogg", volume = 0.4 },
+    sound = { filename = "__base__/sound/accumulator-working.ogg", volume = 0.4 },
     apparent_volume = 0.3,
   }
   modelPowerCrystal.graphics_set = {
@@ -436,8 +347,10 @@ data:extend { moduleCategory }
 local productivityModule = table.deepcopy(data.raw.module["productivity-module"])
 productivityModule.name = "productivity-power-crystal-module"
 productivityModule.category = "crystal"
+productivityModule.localised_name = "Red crystal"
 productivityModule.tier = 1
 productivityModule.effect = { productivity = { bonus = 0.25 } }
+productivityModule.icon = "__PowerCrystals__/graphics/power-crystal/crystal-icon.png"
 -- productivityModule.beacon_tint =
 
 data:extend { productivityModule }
@@ -445,8 +358,10 @@ data:extend { productivityModule }
 local effectivityModule = table.deepcopy(data.raw.module["effectivity-module"])
 effectivityModule.name = "effectivity-power-crystal-module"
 effectivityModule.category = "crystal"
+effectivityModule.localised_name = "Green crystal"
 effectivityModule.tier = 2
 effectivityModule.effect = { consumption = { bonus = -1 }, pollution = { bonus = -0.2 } }
+effectivityModule.icon = "__PowerCrystals__/graphics/power-crystal/crystal-icon.png"
 -- effectivityModule.beacon_tint =
 
 data:extend { effectivityModule }
@@ -455,8 +370,10 @@ data:extend { effectivityModule }
 local speedModule = table.deepcopy(data.raw.module["speed-module"])
 speedModule.name = "speed-power-crystal-module"
 speedModule.category = "crystal"
+speedModule.localised_name = "Blue crystal"
 speedModule.tier = 3
 speedModule.effect = { speed = { bonus = 0.5 } }
+speedModule.icon = "__PowerCrystals__/graphics/power-crystal/crystal-icon.png"
 -- speedModule.beacon_tint =
 
 data:extend { speedModule }
@@ -465,8 +382,19 @@ data:extend { speedModule }
 local instabilityModule = table.deepcopy(data.raw.module["speed-module"])
 instabilityModule.name = "instability-power-crystal-module"
 instabilityModule.category = "crystal"
+instabilityModule.localised_name = "Purple crystal"
 instabilityModule.tier = 4
 instabilityModule.effect = { speed = { bonus = -0.5 }, consumption = { bonus = 1 }, pollution = { bonus = 0.2 } }
+instabilityModule.icon = "__PowerCrystals__/graphics/power-crystal/crystal-icon.png"
+
+-- could add tint like this:
+-- fireArmor.icons= {
+--   {
+--      icon=fireArmor.icon,
+--      tint={r=1,g=0,b=0,a=0.3}
+--   },
+-- }
+
 -- instabilityModule.beacon_tint =
 
 data:extend { instabilityModule }
