@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "title": "PowerCrystals",
   "author": "Goradux",
-  "factorio_version": "1.1.60",
-  "dependencies": ["base >= 1.1.60"],
+  "factorio_version": "1.1",
+  "dependencies": ["base >= 1.1"],
   "description": "This mod adds a set of power crystals as environment entities. They work as naturally-spawned more powerful beacons."
 }
