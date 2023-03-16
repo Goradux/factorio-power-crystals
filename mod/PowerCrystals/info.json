@@ -5,5 +5,5 @@
   "author": "Goradux",
   "factorio_version": "1.1.60",
   "dependencies": ["base >= 1.1.60"],
-  "description": "This mod adds a set of power crystals as environment entities."
+  "description": "This mod adds a set of power crystals as environment entities. They work as naturally-spawned more powerful beacons."
 }
