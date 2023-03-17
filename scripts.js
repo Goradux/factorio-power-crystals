@@ -20,4 +20,5 @@ var newPath = env.modFolderPath + filename;
 fs.rename(filename, newPath, function (err) {
   if (err) throw err;
   console.log("Successfully moved the mod to mod folder. Ready to debug.");
+  console.log(`The file is located in this folder: ${env.modFolderPath}`);
 });
