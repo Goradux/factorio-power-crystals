@@ -7,6 +7,15 @@ script.on_init(function()
   ---@type boolean
   ---@diagnostic disable-next-line: assign-type-mismatch
   global.enable_negative = settings.global["power-crystals-enable-negative"].value
+  ---@type number
+  ---@diagnostic disable-next-line: assign-type-mismatch
+  global.chance_tier_1 = settings.global["power-crystals-frequency-tier-1"].value
+  ---@type number
+  ---@diagnostic disable-next-line: assign-type-mismatch
+  global.chance_tier_2 = settings.global["power-crystals-frequency-tier-2"].value
+  ---@type number
+  ---@diagnostic disable-next-line: assign-type-mismatch
+  global.chance_tier_3 = settings.global["power-crystals-frequency-tier-3"].value
 end
 )
 
@@ -127,17 +136,26 @@ end
 --- good beacons will cover 2.25*4+6.25*2+16 = 37.5 chunks out of 100
 --- bad beacons will cover 2.25*4+6.25*2 = 21.5 chunks out of 100
 ---@return {tier: integer, positive: boolean?}
-local function to_generate_beacon_v2()
-  local roll = global.generator(1, 100)
-  if roll == 1 then                     -- 1% for a tier 3 good crystal
+local function to_generate_beacon_v3()
+  local roll = global.generator(1, 10000)
+  local t3_condition = roll <= global.chance_tier_3
+  local t2_condition = roll > global.chance_tier_3 and roll <= (global.chance_tier_3 + global.chance_tier_2)
+  local t1_condition = roll > (global.chance_tier_3 + global.chance_tier_2) and
+  roll <= (global.chance_tier_3 + global.chance_tier_2 + global.chance_tier_1)
+  local t2_negative_condition = roll > (global.chance_tier_3 + global.chance_tier_2 + global.chance_tier_1) and
+  roll <= (global.chance_tier_3 + global.chance_tier_2 * 2 + global.chance_tier_1)
+  local t1_negative_condition = roll > (global.chance_tier_3 + global.chance_tier_2 * 2 + global.chance_tier_1) and
+  roll <= (global.chance_tier_3 + global.chance_tier_2 * 2 + global.chance_tier_1 * 2)
+
+  if t3_condition then                                         -- 1% for a tier 3 good crystal
     return { tier = 3, positive = true }
-  elseif roll >= 2 and roll <= 3 then   -- 2% for tier 2 good
+  elseif t2_condition then                                     -- 2% for tier 2 good
     return { tier = 2, positive = true }
-  elseif roll >= 4 and roll <= 7 then   -- 4% for tier 1 good
+  elseif t1_condition then                                     -- 4% for tier 1 good
     return { tier = 1, positive = true }
-  elseif global.enable_negative and roll >= 8 and roll <= 9 then   -- 2% for tier 2 bad
+  elseif global.enable_negative and t2_negative_condition then -- 2% for tier 2 bad
     return { tier = 2, positive = false }
-  elseif global.enable_negative and roll >= 10 and roll <= 13 then -- 4% for tier 1 bad
+  elseif global.enable_negative and t1_negative_condition then -- 4% for tier 1 bad
     return { tier = 1, positive = false }
   end
   return { tier = 0 } -- no generation
@@ -149,7 +167,7 @@ script.on_event(defines.events.on_chunk_generated, function(event)
   -- event.position also x and y, but must be multiplied by 32 to get map location
 
   -- RNG decide if needs to have a beacon or not
-  local to_generate = to_generate_beacon_v2()
+  local to_generate = to_generate_beacon_v3()
   if to_generate.tier > 0 then
     local map_position = {
       x = event.position.x * 32 + global.generator(0, 29),
@@ -177,7 +195,7 @@ script.on_event(defines.events.on_chunk_generated, function(event)
 
       -- spawn the crystal
       local generated_crystal = generate_one_crystal(event.surface, map_position, "player", to_generate.tier,
-      to_generate.positive)
+        to_generate.positive)
 
       -- save meta info for tagging
       if global.tag_crystals then
@@ -247,10 +265,26 @@ end
 
 script.on_event(defines.events.on_runtime_mod_setting_changed, function(event)
   if event.setting == "power-crystals-tag-new-crystals" then
+    ---@type boolean
+    ---@diagnostic disable-next-line: assign-type-mismatch
     global.tag_crystals = settings.global["power-crystals-tag-new-crystals"].value
     -- game.get_player("Goradux").print("Changed tag settings!")
   elseif event.setting == "power-crystals-enable-negative" then
+    ---@type boolean
+    ---@diagnostic disable-next-line: assign-type-mismatch
     global.enable_negative = settings.global["power-crystals-enable-negative"].value
+  elseif event.setting == "power-crystals-frequency-tier-1" then
+    ---@type number
+    ---@diagnostic disable-next-line: assign-type-mismatch
+    global.chance_tier_1 = settings.global["power-crystals-frequency-tier-1"].value
+  elseif event.setting == "power-crystals-frequency-tier-2" then
+    ---@type number
+    ---@diagnostic disable-next-line: assign-type-mismatch
+    global.chance_tier_2 = settings.global["power-crystals-frequency-tier-2"].value
+  elseif event.setting == "power-crystals-frequency-tier-3" then
+    ---@type number
+    ---@diagnostic disable-next-line: assign-type-mismatch
+    global.chance_tier_3 = settings.global["power-crystals-frequency-tier-3"].value
   end
 end
 )
