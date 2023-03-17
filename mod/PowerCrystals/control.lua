@@ -2,7 +2,11 @@ script.on_init(function()
   global.generator = game.create_random_generator()
   global.chunks_with_crystals = {}
   ---@type boolean
+  ---@diagnostic disable-next-line: assign-type-mismatch
   global.tag_crystals = settings.global["power-crystals-tag-new-crystals"].value
+  ---@type boolean
+  ---@diagnostic disable-next-line: assign-type-mismatch
+  global.enable_negative = settings.global["power-crystals-enable-negative"].value
 end
 )
 
@@ -121,19 +125,19 @@ end
 --- t2 = 2.5 chunks => area = 2.5^2=6.25 chunks
 --- t3 = 4 chunks => area = 4^2=16 chunks
 --- good beacons will cover 2.25*4+6.25*2+16 = 37.5 chunks out of 100
---- bad beacons will cover 2.25*4+6.25*2 = 21.5 chunks out of 100 
+--- bad beacons will cover 2.25*4+6.25*2 = 21.5 chunks out of 100
 ---@return {tier: integer, positive: boolean?}
 local function to_generate_beacon_v2()
   local roll = global.generator(1, 100)
-  if roll == 1 then -- 1% for a tier 3 good crystal
+  if roll == 1 then                     -- 1% for a tier 3 good crystal
     return { tier = 3, positive = true }
-  elseif roll >= 2 and roll <= 3 then -- 2% for tier 2 good
+  elseif roll >= 2 and roll <= 3 then   -- 2% for tier 2 good
     return { tier = 2, positive = true }
-  elseif roll >= 4 and roll <= 7 then -- 4% for tier 1 good
+  elseif roll >= 4 and roll <= 7 then   -- 4% for tier 1 good
     return { tier = 1, positive = true }
-  elseif roll >= 8 and roll <= 9 then -- 2% for tier 2 bad
+  elseif global.enable_negative and roll >= 8 and roll <= 9 then   -- 2% for tier 2 bad
     return { tier = 2, positive = false }
-  elseif roll >= 10 and roll <= 13 then -- 4% for tier 1 bad
+  elseif global.enable_negative and roll >= 10 and roll <= 13 then -- 4% for tier 1 bad
     return { tier = 1, positive = false }
   end
   return { tier = 0 } -- no generation
@@ -172,7 +176,8 @@ script.on_event(defines.events.on_chunk_generated, function(event)
       --   (map_position.x) .. " " .. (map_position.y))
 
       -- spawn the crystal
-      local generated_crystal = generate_one_crystal(event.surface, map_position, "player", to_generate.tier, to_generate.positive)
+      local generated_crystal = generate_one_crystal(event.surface, map_position, "player", to_generate.tier,
+      to_generate.positive)
 
       -- save meta info for tagging
       if global.tag_crystals then
@@ -244,6 +249,8 @@ script.on_event(defines.events.on_runtime_mod_setting_changed, function(event)
   if event.setting == "power-crystals-tag-new-crystals" then
     global.tag_crystals = settings.global["power-crystals-tag-new-crystals"].value
     -- game.get_player("Goradux").print("Changed tag settings!")
+  elseif event.setting == "power-crystals-enable-negative" then
+    global.enable_negative = settings.global["power-crystals-enable-negative"].value
   end
 end
 )

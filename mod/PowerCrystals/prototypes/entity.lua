@@ -357,8 +357,6 @@ productivityModule.icons = {
   },
 }
 
--- productivityModule.beacon_tint =
-
 data:extend { productivityModule }
 
 local effectivityModule = table.deepcopy(data.raw.module["effectivity-module"])
