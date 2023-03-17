@@ -350,7 +350,13 @@ productivityModule.category = "crystal"
 productivityModule.localised_name = "Red crystal"
 productivityModule.tier = 1
 productivityModule.effect = { productivity = { bonus = 0.25 } }
-productivityModule.icon = "__PowerCrystals__/graphics/power-crystal/crystal-icon.png"
+productivityModule.icons = {
+  {
+    icon = "__PowerCrystals__/graphics/power-crystal/crystal-icon.png",
+      tint = {r = 1, g = 0, b = 0, a = 0.2}
+  },
+}
+
 -- productivityModule.beacon_tint =
 
 data:extend { productivityModule }
@@ -361,8 +367,12 @@ effectivityModule.category = "crystal"
 effectivityModule.localised_name = "Green crystal"
 effectivityModule.tier = 2
 effectivityModule.effect = { consumption = { bonus = -1 }, pollution = { bonus = -0.2 } }
-effectivityModule.icon = "__PowerCrystals__/graphics/power-crystal/crystal-icon.png"
--- effectivityModule.beacon_tint =
+effectivityModule.icons = {
+  {
+    icon = "__PowerCrystals__/graphics/power-crystal/crystal-icon.png",
+      tint = {r = 0, g = 1, b = 0, a = 0.2}
+  },
+}
 
 data:extend { effectivityModule }
 
@@ -373,8 +383,12 @@ speedModule.category = "crystal"
 speedModule.localised_name = "Blue crystal"
 speedModule.tier = 3
 speedModule.effect = { speed = { bonus = 0.5 } }
-speedModule.icon = "__PowerCrystals__/graphics/power-crystal/crystal-icon.png"
--- speedModule.beacon_tint =
+speedModule.icons = {
+  {
+    icon = "__PowerCrystals__/graphics/power-crystal/crystal-icon.png",
+      tint = {r = 0, g = 0, b = 1, a = 0.2}
+  },
+}
 
 data:extend { speedModule }
 
@@ -385,16 +399,11 @@ instabilityModule.category = "crystal"
 instabilityModule.localised_name = "Purple crystal"
 instabilityModule.tier = 4
 instabilityModule.effect = { speed = { bonus = -0.5 }, consumption = { bonus = 1 }, pollution = { bonus = 0.2 } }
-instabilityModule.icon = "__PowerCrystals__/graphics/power-crystal/crystal-icon.png"
-
--- could add tint like this:
--- fireArmor.icons= {
---   {
---      icon=fireArmor.icon,
---      tint={r=1,g=0,b=0,a=0.3}
---   },
--- }
-
--- instabilityModule.beacon_tint =
+instabilityModule.icons = {
+  {
+    icon = "__PowerCrystals__/graphics/power-crystal/crystal-icon.png",
+      tint = {r = 0.85, g = 0.44, b = 0.84, a = 0.2}
+  },
+}
 
 data:extend { instabilityModule }
