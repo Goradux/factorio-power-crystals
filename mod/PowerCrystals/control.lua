@@ -60,6 +60,7 @@ local function generate_one_crystal(surface, spawn_location, force_name, tier, p
     force = force_name,
     position = { spawn_location.x, spawn_location.y },
   }
+  pc.destructible = false
 
   if pc then
     if tier == 1 then
@@ -77,6 +78,7 @@ local function generate_one_crystal(surface, spawn_location, force_name, tier, p
     force = force_name,
     position = { spawn_location.x, spawn_location.y },
   }
+  maskCrystal.destructible = false
 
   return { tier = tier, type = exact_type }
 end
